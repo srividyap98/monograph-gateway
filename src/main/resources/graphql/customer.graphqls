@@ -1,0 +1,42 @@
+# Customer domain schema (Level 1).
+# Each domain (Customer, Account, Financial, ...) gets its own .graphqls file;
+# Spring for GraphQL merges every *.graphqls under classpath:graphql/ into one schema.
+
+type Query {
+    "Look up a single customer by id. Returns null when no customer exists."
+    customer(id: ID!): Customer
+    "Look up several customers by id (at most 50). Same order as ids; null for ids that do not exist."
+    customers(ids: [ID!]!): [Customer]!
+}
+
+# Writes are forwarded to the Customer service, which is the system of record.
+# Root mutation fields in one document run serially, in order (queries may run in parallel).
+type Mutation {
+    "Registers a new customer. The Customer service assigns the id and the initial status (ACTIVE)."
+    createCustomer(input: CreateCustomerInput!): Customer!
+    "Changes a customer's status. Fails with NOT_FOUND if the customer does not exist."
+    updateCustomerStatus(id: ID!, status: CustomerStatus!): Customer!
+}
+
+input CreateCustomerInput {
+    "1-100 characters after trimming."
+    firstName: String!
+    "1-100 characters after trimming."
+    lastName: String!
+    "Optional; must be unique across customers (CONFLICT otherwise)."
+    email: String
+}
+
+type Customer {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String
+    status: CustomerStatus!
+}
+
+enum CustomerStatus {
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+}

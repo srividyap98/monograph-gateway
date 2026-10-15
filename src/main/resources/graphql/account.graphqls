@@ -1,0 +1,29 @@
+# Account domain schema (owned by the Account service).
+
+# The Account domain contributes this field to Customer, the same way financial.graphqls
+# contributes to Account. In Phase 3 this becomes the account subgraph's part of the
+# Customer entity (type Customer @key(fields: "id")).
+extend type Customer {
+    "From the Account service. Empty when the customer holds no accounts."
+    accounts: [Account!]!
+}
+
+type Account {
+    id: ID!
+    type: AccountType!
+    status: AccountStatus!
+    "ISO-4217 code, e.g. USD."
+    currency: String!
+}
+
+enum AccountType {
+    CHECKING
+    SAVINGS
+    CREDIT_CARD
+}
+
+enum AccountStatus {
+    OPEN
+    CLOSED
+    FROZEN
+}

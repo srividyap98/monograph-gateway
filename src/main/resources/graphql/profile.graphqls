@@ -1,0 +1,15 @@
+# Aggregated customer view for the customer-service platform (Stage 6).
+# One query fans out to the Customer, Account and Financial services; each field below is
+# resolved by the domain that owns the data, and only if the client selects it.
+
+extend type Query {
+    "Customer, accounts, balances and transactions in one round trip. Null when no customer exists."
+    customerProfile(customerId: ID!): CustomerProfile
+}
+
+type CustomerProfile {
+    "From the Customer service."
+    customer: Customer!
+    "From the Account service. Empty when the customer holds no accounts."
+    accounts: [Account!]!
+}

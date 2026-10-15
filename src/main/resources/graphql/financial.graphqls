@@ -1,0 +1,34 @@
+# Financial domain schema (owned by the Financial service).
+# Adds money fields to the Account type instead of redefining it: the Account domain owns
+# "which accounts exist", the Financial domain owns "how much is in them".
+# Amounts are decimal strings (e.g. "1250.75") so no client parses money into a float.
+
+extend type Account {
+    "Current balance. Null when the Financial service has no balance for this account."
+    balance: Balance
+    "Most recent posted transactions, newest first. 1 <= limit <= 50."
+    transactions(limit: Int! = 10): [Transaction!]!
+}
+
+type Balance {
+    available: String!
+    ledger: String!
+    currency: String!
+    "ISO-8601 instant the balance was computed."
+    asOf: String!
+}
+
+type Transaction {
+    id: ID!
+    "Always positive; see type for direction."
+    amount: String!
+    type: TransactionType!
+    description: String!
+    "ISO-8601 instant."
+    postedAt: String!
+}
+
+enum TransactionType {
+    DEBIT
+    CREDIT
+}

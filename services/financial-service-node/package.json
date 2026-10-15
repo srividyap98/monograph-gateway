@@ -1,0 +1,19 @@
+{
+  "name": "financial-service-node",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Demonstration: the simulated Financial service re-implemented in Node.js/TypeScript, wire-compatible with com.monograph.downstream.financial",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/server.js",
+    "test": "npm run build && node --test \"dist/test/**/*.test.js\""
+  },
+  "devDependencies": {
+    "@types/node": "22.18.13",
+    "typescript": "5.9.3"
+  }
+}

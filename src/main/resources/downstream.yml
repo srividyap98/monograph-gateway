@@ -1,0 +1,7 @@
+# Configuration for the simulated downstream services (DownstreamServicesApplication only).
+spring:
+  application:
+    name: downstream-services
+
+server:
+  port: 8090

@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: monograph-gateway
+  graphql:
+    http:
+      path: /graphql
+    graphiql:
+      enabled: true      # browser IDE at /graphiql - disable outside local/dev
+    schema:
+      printer:
+        enabled: true    # GET /graphql/schema returns the merged schema
+
+server:
+  port: 8080
+
+# Backend services the gateway aggregates. Defaults point at DownstreamServicesApplication (port 8090);
+# override per environment, e.g. MONOGRAPH_DOWNSTREAM_ACCOUNT_BASE_URL=https://accounts.internal
+# Each service also accepts optional connect-timeout / read-timeout; unset keeps the HTTP client default.
+monograph:
+  downstream:
+    customer:
+      base-url: http://localhost:8090/customer-service
+    account:
+      base-url: http://localhost:8090/account-service
+    financial:
+      # Or the Node implementation: http://localhost:8091/financial-service (services/financial-service-node)
+      base-url: http://localhost:8090/financial-service
+      connect-timeout: 1s
+      read-timeout: 2s
